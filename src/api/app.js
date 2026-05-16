@@ -17,13 +17,12 @@ function startServer() {
 
   // Add logging middleware
   app.use((req, res, next) => {
-    console.log(req);
     console.log(`[APP MIDDLEWARE] ${req.method} ${req.path}`);
     next();
   });
 
   app.use('/tasks', taskRoutes);
-  app.use('/reminders', reminderRoutes);
+  app.use('/reminder', reminderRoutes);
 
   app.listen(process.env.PORT, () => {
     console.log(`Server running on ${process.env.PORT}`);

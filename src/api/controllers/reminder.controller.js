@@ -1,6 +1,5 @@
-const Reminder =
-  require('../../models/reminder.model');
-
+const Reminder = require('../../models/reminder.model');
+const ReminderService = require('../services/reminder.service');
 
   async function createReminder(req, res) {
       try {
@@ -11,12 +10,14 @@ const Reminder =
         );
     
         const {
+          guildId,     
+          channelId,
+          creatorId,   
           message,
-          remindAt,
-          discordId
+          remindAt
         } = req.body;
     
-        if (!message || !remindAt || !discordId) {
+        if (!message || !remindAt) {
     
           return res.status(400).json({
             error:
@@ -25,10 +26,12 @@ const Reminder =
         }
     
         const reminder =
-          await Reminder.create({
+          await ReminderService.create({
+            guildId,     
+            channelId,
+            creatorId,   
             message,
-            remindAt,
-            discordId
+            remindAt
           });
     
         return res.json(reminder);
@@ -43,7 +46,7 @@ const Reminder =
         });
       }
   }
-
+  
   module.exports = {
     createReminder
   };

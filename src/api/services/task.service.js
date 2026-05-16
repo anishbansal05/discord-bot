@@ -8,6 +8,44 @@ const Task = require('../../models/task.model');
     });
   }
 
+  async function markDone(data) {
+
+    return await Task.findOneAndUpdate(
+
+      {
+        discordId:
+          data.discordId,
+
+        title:
+          data.title,
+
+        completed: false
+      },
+
+      {
+        completed: true
+      },
+
+      { returnDocument: 'after' } 
+
+    );
+  }
+
+async function markDelete(data) {
+
+  return await Task.findOneAndDelete({
+
+    discordId:
+      data.discordId,
+
+    title:
+      data.title,
+
+    completed: false
+
+  });
+}
+
 module.exports = {
-  create
+  create,markDone,markDelete
 };

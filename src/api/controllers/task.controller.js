@@ -8,15 +8,9 @@ async function createTask(req, res) {
 
   try {
 
-    console.log(
-      'Received request:',
-      req.body
-    );
+    console.log('Received request:', req.body);
 
-    const {
-      title,
-      discordId
-    } = req.body;
+    const { title, discordId } = req.body;
 
     if (!title || !discordId) {
 
@@ -83,8 +77,76 @@ async function getTasksByDiscordId(
   }
 }
 
+async function taskDone(
+  req,
+  res
+) {
+
+  try {
+
+    const task =
+      await TaskService.markDone(
+        req.body
+      );
+
+    if (!task) {
+
+      return res.status(404).json({
+        error:
+          'Task not found'
+      });
+    }
+
+    return res.json(task);
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.status(500).json({
+      error:
+        'Internal server error'
+    });
+  }
+}
+
+async function taskDelete(
+  req,
+  res
+) {
+
+  try {
+
+    const task =
+      await TaskService.markDelete(
+        req.body
+      );
+
+    if (!task) {
+
+      return res.status(404).json({
+        error:
+          'Task not found'
+      });
+    }
+
+    return res.json(task);
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.status(500).json({
+      error:
+        'Internal server error'
+    });
+  }
+}
+
 module.exports = {
   createTask,
   showTask,
-  getTasksByDiscordId
+  getTasksByDiscordId,
+  taskDone,
+  taskDelete
 };
