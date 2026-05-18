@@ -5,19 +5,25 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "worker": "nodemon src/worker.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@bull-board/api": "^7.1.5",
+    "@bull-board/express": "^7.1.5",
     "amqplib": "^2.0.1",
     "axios": "^1.16.1",
+    "bullmq": "^5.76.9",
     "chrono-node": "^2.9.1",
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "googleapis": "^171.4.0",
+    "ioredis": "^5.10.1",
     "mongoose": "^9.6.2",
     "node-cron": "^4.2.1"
   },

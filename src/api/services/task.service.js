@@ -12,38 +12,43 @@ const Task = require('../../models/task.model');
 
     return await Task.findOneAndUpdate(
 
-      {
-        discordId:
-          data.discordId,
+    {
+      discordId:
+        data.discordId,
 
-        title:
-          data.title,
+      title:
+        data.title,
 
-        completed: false
-      },
-
-      {
-        completed: true
-      },
-
-      { returnDocument: 'after' } 
+      status: 'pending'
+    },
+    {
+      status: 'completed'
+    },
+    { returnDocument: 'after' } 
 
     );
   }
 
 async function markDelete(data) {
 
-  return await Task.findOneAndDelete({
+  return await Task.findOneAndDelete(
 
-    discordId:
-      data.discordId,
+    {
 
-    title:
-      data.title,
+     discordId:
+        data.discordId,
 
-    completed: false
+      title:
+        data.title,
 
-  });
+      status: 'pending'
+
+  },
+  {
+      status: 'deleted'
+  },
+  { returnDocument: 'after' } 
+);
 }
 
 module.exports = {

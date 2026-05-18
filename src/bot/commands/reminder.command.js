@@ -1,94 +1,140 @@
 const axios = require('axios');
-const chrono = require('chrono-node');
 
-// async function handleReminderCommand(
-//   message
-// ) {
+const chrono =
+  require('chrono-node');
 
-//   if (
-//     !message.content.startsWith(
-//       '!remind '
-//     )
-//   ) {
-//     return;
-//   }
+const {
+  createCalendarEvent
+} = require(
+  '../../api/services/calendar.service'
+);
 
-//   const raw =
-//     message.content.replace(
-//       '!remind',
-//       ''
-//     ).trim();
+async function handleReminderCommand(
+  message
+) {
 
-//   // parse date
-//   const parsedDate =
-//     chrono.parseDate(raw);
-
-//   if (!parsedDate) {
-
-//     return message.reply(
-//       'Could not parse time'
-//     );
-//   }
-
-//   // remove date text
-//   const dateText =
-//     chrono.parse(raw)[0]?.text;
-
-//   const reminderMessage =
-//     raw.replace(dateText, '').trim();
-
-//   const reminder =
-//     await Reminder.create({
-
-//       guildId:
-//         message.guild.id,
-
-//       channelId:
-//         message.channel.id,
-
-//       creatorId:
-//         message.author.id,
-
-//       message:
-//         reminderMessage,
-
-//       remindAt:
-//         parsedDate
-
-//     });
-
-//   console.log(
-//     'REMINDER CREATED',
-//     reminder
-//   );
-
-//   await message.reply(
-
-//     `Reminder set for ${parsedDate}`
-//   );
-// }
-async function handleReminderCommand(message) {
-  // console.log("message for reminder:",message)
-  if (!message.content.startsWith('!reminder ')) {
+  if (
+    !message.content.startsWith(
+      '!reminder '
+    )
+  ) {
     return;
   }
-  const raw = message.content.replace('!reminder','').trim();
 
-    const parsedDate =chrono.parseDate(raw);
-    if (!parsedDate) {return message.reply('Could not parse time');}
+  const raw =
+    message.content
+      .replace(
+        '!reminder',
+        ''
+      )
+      .trim();
 
-    const dateText = chrono.parse(raw)[0]?.text;
-    const reminderMessage = raw.replace(dateText, '').trim();
+  const results =
+    chrono.parse(
 
-    await axios.post('http://localhost:3000/reminder', {
-      guildId: message.guild.id,
-      channelId: message.channel.id,
-      creatorId: message.author.id,
-      message:reminderMessage,
-      remindAt:parsedDate
-    });
+      raw,
 
-  await message.reply(`Reminder set for ${parsedDate}`);
+      new Date(),
+
+      {
+        forwardDate: true
+      }
+
+    );
+
+  const parsedDate =
+    results[0]?.start.date();
+
+  if (!parsedDate) {
+
+    return message.reply(
+      'Could not parse time'
+    );
+  }
+
+  console.log(
+    'PARSED DATE',
+    parsedDate
+  );
+
+  console.log(
+
+    parsedDate.toLocaleString(
+
+      'en-IN',
+
+      {
+        timeZone:
+          'Asia/Kolkata'
+      }
+
+    )
+
+  );
+
+  const endDate =
+  new Date(
+
+    parsedDate.getTime() +
+
+    30 * 60 * 1000
+  );
+
+  const dateText =
+    results[0]?.text;
+
+  const reminderMessage =
+    raw.replace(
+      dateText,
+      ''
+    ).trim();
+
+  await createCalendarEvent({
+
+    summary:
+      reminderMessage,
+
+    description:
+      `Created from Discord bot`,
+
+    startDate:
+      parsedDate,
+
+    endDate
+
+  });
+
+  await axios.post(
+
+    'http://localhost:3000/reminder',
+
+    {
+
+      guildId:
+        message.guild.id,
+
+      channelId:
+        message.channel.id,
+
+      creatorId:
+        message.author.id,
+
+      message:
+        reminderMessage,
+
+      remindAt:
+        parsedDate
+    }
+
+  );
+
+  // await message.reply(
+  //   `Reminder set for ${parsedDate.toLocaleString('en-IN')}`
+  // );
+  await message.reply(
+    `📅 Reminder + Calendar event created for
+    ${parsedDate.toLocaleString('en-IN')}`
+  );
 }
 
 module.exports =

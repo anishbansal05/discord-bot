@@ -15,13 +15,23 @@ const TaskSchema =
 
     remindAt: Date,
 
-    completed: {
-      type: Boolean,
-      default: false
+    status: {
+
+      type: String,
+
+      enum: [
+        'pending',
+        'completed',
+        'deleted'
+      ],
+
+      default: 'pending'
     },
 
     sent: {
+
       type: Boolean,
+
       default: false
     }
 
