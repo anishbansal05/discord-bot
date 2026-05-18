@@ -2,7 +2,6 @@ const axios = require('axios');
 const chrono = require('chrono-node');
 
 async function handleTaskCommand(message) {
-
   if (!message.content.startsWith('!task ')) {
     return;
   }
@@ -45,7 +44,7 @@ async function handleTasksCommand(message) {
       (task, index) => {
 
         output +=
-          `${index + 1}. ${task.title}\n`;
+          `${task.completed ? '✅' : '❌'}. ${index + 1}. ${task.title}\n`;
       }
     );
 
@@ -62,27 +61,45 @@ async function handleTasksCommand(message) {
     );
   }
 }
-async function handleReminderCommand(message) {
-  if (!message.content.startsWith('!remind ')) {
+
+async function handleDeleteTaskCommand(message) {
+  console.log('deleteemessage',message.content)
+   if (
+    !message.content.startsWith(
+      '!delete '
+    )
+  ) {
     return;
   }
-  const raw = message.content.replace('!remind','').trim();
 
-    const parsedDate =chrono.parseDate(raw);
-    if (!parsedDate) {return message.reply('Could not parse time');}
+  try {
+    const title =
+    message.content
+      .slice(8)
+      .trim();
 
-    const dateText = chrono.parse(raw)[0]?.text;
-    const reminderMessage = raw.replace(dateText, '').trim();
+    const response =
+      await axios.delete(
+        'http://localhost:3000/tasks/',
+        {
+          data: {
+            title,
+            discordId:message.author.id
+          }
+        }
+      );
+    await message.reply(
+      `Deleted: ${response.data.title}`
+    );
 
-    await axios.post('http://localhost:3000/tasks', {
-      guildId: message.guild.id,
-      channelId: message.channel.id,
-      creatorId: message.author.id,
-      message:reminderMessage,
-      remindAt:parsedDate
-    });
+  } catch (err) {
 
-  await message.reply(`Reminder set for ${parsedDate}`);
+    console.error(err);
+
+    await message.reply(
+      'Failed to fetch tasks'
+    );
+  }
 }
 
-module.exports = { handleTaskCommand, handleTasksCommand, handleReminderCommand };
+module.exports = { handleTaskCommand, handleTasksCommand , handleDeleteTaskCommand};

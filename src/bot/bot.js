@@ -1,8 +1,10 @@
 const client =
   require('./discordClient');
 
-const { handleTaskCommand, handleTasksCommand, handleReminderCommand } =
-  require('./commands/task.command');
+const { handleTaskCommand, handleTasksCommand, handleDeleteTaskCommand } =require('./commands/task.command');
+const  handleReminderCommand  = require('./commands/reminder.command');
+const markTaskDoneCommand = require('./commands/done.command');
+
 function startBot() {
 
   client.once(
@@ -19,7 +21,7 @@ function startBot() {
 
         activities: [
           {
-             name: '!task | !remind | !list',
+             name: '!task | !reminder | !list | !done | !delete',
           }
         ]
 
@@ -43,6 +45,13 @@ function startBot() {
         message
       );
       await handleTasksCommand(
+        message
+      );
+      await markTaskDoneCommand(
+        message
+      );
+
+      await handleDeleteTaskCommand(
         message
       );
     }

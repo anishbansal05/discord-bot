@@ -31,14 +31,16 @@ function startReminderScheduler() {
 
     });
 
+    // console.log(reminders,"reminder is this")
+
     for (const reminder of reminders) {
 
       try {
 
-        const channel =
+       const channel =
           await client.channels.fetch(
             reminder.channelId
-          );
+          ); 
 
         await channel.send(
 

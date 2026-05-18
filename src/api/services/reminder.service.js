@@ -4,7 +4,9 @@ const Reminder = require('../../models/reminder.model');
     return await Reminder.create({
       message: data.message,
       remindAt: data.remindAt,
-      discordId: data.discordId
+      creatorId: data.creatorId,
+      guildId : data.guildId,     
+      channelId: data.channelId,
     });
   }
 
