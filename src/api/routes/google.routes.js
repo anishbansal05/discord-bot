@@ -4,6 +4,9 @@ const express =
 const router =
   express.Router();
 
+  const fs =
+  require('fs');
+
 const {
 
   oauth2Client,
@@ -57,6 +60,18 @@ router.get(
         'TOKENS',
         tokens
       );
+
+      fs.writeFileSync(
+
+  './src/config/googleTokens.json',
+
+  JSON.stringify(
+    tokens,
+    null,
+    2
+  )
+
+);
 
       res.send(
         'Google Calendar connected'

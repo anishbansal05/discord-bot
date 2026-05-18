@@ -18,11 +18,31 @@ async function createCalendarEvent({
 
 }) {
 
-  const tokenStore =
-  require('../../config/googleTokens');
+  // const tokenStore =
+  // require('../../config/googleTokens');
+
+  const fs =
+  require('fs');
+
+const tokens = JSON.parse(
+
+  fs.readFileSync(
+
+    './src/config/googleTokens.json'
+
+  )
+
+);
+
+  console.log(
+  'TOKEN STORE',
+  tokens
+);
+
 
 oauth2Client.setCredentials(
-  tokenStore.tokens
+  // tokenStore.tokens
+  tokens
 );
 
   const calendar =

@@ -3,11 +3,11 @@ const axios = require('axios');
 const chrono =
   require('chrono-node');
 
-const {
-  createCalendarEvent
-} = require(
-  '../../api/services/calendar.service'
-);
+// const {
+//   createCalendarEvent
+// } = require(
+//   '../../api/services/calendar.service'
+// );
 
 async function handleReminderCommand(
   message
@@ -89,20 +89,20 @@ async function handleReminderCommand(
       ''
     ).trim();
 
-  await createCalendarEvent({
+  // await createCalendarEvent({
 
-    summary:
-      reminderMessage,
+  //   summary:
+  //     reminderMessage,
 
-    description:
-      `Created from Discord bot`,
+  //   description:
+  //     `Created from Discord bot`,
 
-    startDate:
-      parsedDate,
+  //   startDate:
+  //     parsedDate,
 
-    endDate
+  //   endDate
 
-  });
+  // });
 
   await axios.post(
 
