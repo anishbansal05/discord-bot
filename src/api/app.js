@@ -1,7 +1,10 @@
 const express = require('express');
 
 const taskRoutes = require('./routes/task.routes');
-const reminderRoutes = require('./routes/reminder.routes')
+const reminderRoutes = require('./routes/reminder.routes');
+const googleRoutes = require('./routes/google.routes');
+
+const bullBoard = require('./bullboard');
 
 let app = null;
 
@@ -14,6 +17,7 @@ function startServer() {
   app = express();
 
   app.use(express.json());
+  
 
   // Add logging middleware
   app.use((req, res, next) => {
@@ -23,6 +27,16 @@ function startServer() {
 
   app.use('/tasks', taskRoutes);
   app.use('/reminder', reminderRoutes);
+
+  app.use(
+    '/admin/queues',
+    bullBoard.getRouter()
+  );
+
+  app.use(
+    '/auth',
+    googleRoutes
+  );
 
   app.listen(process.env.PORT, () => {
     console.log(`Server running on ${process.env.PORT}`);
